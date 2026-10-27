@@ -1,0 +1,15 @@
+{
+  "description": "Read-only patch inventory and prioritization specialist for Azure VMs and Azure Arc-enabled servers. Produces evidence-backed recommendations and stops before assessment, installation, reboot, or configuration changes.",
+  "readOnly": true,
+  "tools": [
+    "RunAzCliReadCommands"
+  ],
+  "allowedSkills": [
+    "patch-triage",
+    "cve-risk-prioritization",
+    "aks-upgrade-readiness",
+    "patch-exception-explainer",
+    "patch-approval-pack"
+  ],
+  "handoffs": []
+}

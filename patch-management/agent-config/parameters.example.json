@@ -1,0 +1,11 @@
+{
+  "SUBSCRIPTION_ID": "<subscription-id>",
+  "VM_RESOURCE_GROUP": "<vm-and-arc-resource-group>",
+  "AKS_RESOURCE_GROUP": "<aks-resource-group>",
+  "AKS_CLUSTER_NAME": "<aks-cluster-name>",
+  "PILOT_VM_NAME": "<pilot-vm-name>",
+  "EXCEPTION_VM_NAME": "<vm-with-registered-exception>",
+  "AGENT_NAME": "<agent-name>",
+  "POLICY_TITLE": "CPF patch policy (demo)",
+  "PROMPT_PREFIX": "cpf-"
+}

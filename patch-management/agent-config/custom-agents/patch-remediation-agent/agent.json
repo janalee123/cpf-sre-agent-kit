@@ -1,0 +1,12 @@
+{
+  "description": "Write access, opt-in. Approval-gated executor for Critical and Security patch installation on one named pilot VM.",
+  "readOnly": false,
+  "tools": [
+    "RunAzCliReadCommands",
+    "RunAzCliWriteCommands"
+  ],
+  "allowedSkills": [
+    "patch-remediation"
+  ],
+  "handoffs": []
+}

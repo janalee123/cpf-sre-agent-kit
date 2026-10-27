@@ -1,0 +1,4 @@
+{
+  "description": "Use when asked why a VM, Arc server, or AKS cluster is non-compliant, missing assessments, failing patch installs, or stuck on an upgrade. Builds an evidence timeline and a ranked list of likely causes. Read only.",
+  "readOnly": true
+}

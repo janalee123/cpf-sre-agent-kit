@@ -1,0 +1,1 @@
+Prepare a change-approval evidence pack for installing the missing Security updates on {{PILOT_VM_NAME}} in {{VM_RESOURCE_GROUP}}. Use the patch-approval-pack skill with the latest assessment and the CPF patch policy. If any update fixes a CISA known-exploited (KEV) CVE, state whether it needs an emergency change before the next production window. Do not approve or execute.

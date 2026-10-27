@@ -1,0 +1,4 @@
+{
+  "description": "Read-only patch inventory and prioritization for Azure VMs and Azure Arc-enabled servers. Uses bounded Azure CLI reads for Resource Graph, Update Manager, approved Log Analytics data, and available Defender findings; it never installs patches.",
+  "readOnly": true
+}

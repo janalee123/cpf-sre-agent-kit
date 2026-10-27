@@ -1,0 +1,31 @@
+subscription_id           = "<subscription-id>"
+location                  = "southeastasia"
+agent_resource_group_name = "rg-sre-agent-patch"
+agent_name                = "sre-agent-patch"
+action_mode               = "Review"
+
+# Read-only scopes
+vm_scope_ids = [
+  "/subscriptions/<subscription-id>/resourceGroups/<vm-and-arc-resource-group>",
+]
+aks_cluster_ids = [
+  "/subscriptions/<subscription-id>/resourceGroups/<aks-resource-group>/providers/Microsoft.ContainerService/managedClusters/<aks-cluster-name>",
+]
+log_analytics_workspace_ids = [
+  "/subscriptions/<subscription-id>/resourceGroups/<monitoring-resource-group>/providers/Microsoft.OperationalInsights/workspaces/<workspace-name>",
+]
+grant_security_reader = true
+
+# People who use the agent (Entra object IDs)
+agent_user_principal_ids = []
+
+# Optional: gated write to one pilot resource group. Keep false unless you need remediation.
+enable_patch_write    = false
+patch_write_scope_ids = []
+
+# Optional sandbox VM with missing updates
+deploy_demo_vm        = false
+demo_vm_image_version = "latest"
+
+# Load skills, knowledge, prompts and scheduled tasks from ../agent-config after apply
+apply_agent_config = false

@@ -1,0 +1,1 @@
+Why is {{EXCEPTION_VM_NAME}} in {{VM_RESOURCE_GROUP}} not showing as patch-compliant? Use the patch-exception-explainer skill. Give the one-line answer, evidence timeline, cause table, and whether the CPF exception register covers it. Read only.

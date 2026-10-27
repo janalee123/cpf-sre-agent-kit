@@ -1,0 +1,10 @@
+{
+  "SUBSCRIPTION_ID": "<subscription-id>",
+  "AGENT_NAME": "<agent-name>",
+  "AKS_RESOURCE_GROUP": "<aks-resource-group>",
+  "AKS_CLUSTER_NAME": "<aks-cluster-name>",
+  "AKS_NAMESPACE": "<aks-namespace>",
+  "AKS_OOM_ALERT_NAME": "<azure-monitor-alert-rule-name-for-oom-restarts>",
+  "TEAMS_TEAM": "<teams-team-name>",
+  "TEAMS_CHANNEL": "<teams-channel-name>"
+}

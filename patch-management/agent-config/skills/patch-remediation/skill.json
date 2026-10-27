@@ -1,0 +1,4 @@
+{
+  "description": "Write access, opt-in. Install approved Critical and Security updates on one named pilot VM with preflight gates, explicit approval, no automatic reboot and post-install verification.",
+  "readOnly": false
+}

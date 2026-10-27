@@ -1,0 +1,18 @@
+{
+  "description": "Read-only AKS OOM investigation specialist. Investigates OOMKilled, exit code 137 and CrashLoopBackOff incidents, cites live evidence and the approved runbook, and prepares a bounded remediation proposal for human approval. It never executes remediation. Optionally posts one summary to a named Teams channel.",
+  "readOnly": true,
+  "tools": [
+    "RunAzCliReadCommands",
+    "GetAzCliHelp",
+    "SearchMemory"
+  ],
+  "mcpTools": [
+    "teams_teams_GetAllAssociatedTeams",
+    "teams_teams_GetAllChannelsForTeam",
+    "teams_teams_PostMessageToConversation"
+  ],
+  "allowedSkills": [
+    "aks-oom-investigation"
+  ],
+  "handoffs": []
+}

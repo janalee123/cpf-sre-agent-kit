@@ -1,0 +1,4 @@
+{
+  "description": "Use for AKS pods in CrashLoopBackOff or terminated with OOMKilled or exit code 137. Investigates live memory incidents using read-only evidence and prepares remediation proposals without executing them.",
+  "readOnly": true
+}

@@ -1,0 +1,7 @@
+{
+  "name": "weekly-patch-readiness-report",
+  "description": "Weekly read-only patch readiness report (Mon 09:00 SGT)",
+  "cronExpression": "0 1 * * 1",
+  "agentMode": "review",
+  "agentPrompt": "Produce the weekly patch readiness report for subscription {{SUBSCRIPTION_ID}}, resource groups {{VM_RESOURCE_GROUP}} (Azure VMs and any Arc-enabled servers) and {{AKS_RESOURCE_GROUP}} (AKS). Use the patch-triage skill for VMs/Arc and the aks-upgrade-readiness skill for AKS, and compare against the '{{POLICY_TITLE}}' in knowledge. Return: 1) coverage summary (in scope, assessed, stale/missing, unsupported, exceptions); 2) SLA breaches and items due within 7 days; 3) AKS readiness verdicts; 4) top 5 exceptions with a one-line evidence-backed reason (use patch-exception-explainer logic); 5) missing data sources. Cite source and UTC timestamp for every fact. Read only: do not assess, install, upgrade, reboot, start, stop, or change any configuration, and state that no changes were made."
+}

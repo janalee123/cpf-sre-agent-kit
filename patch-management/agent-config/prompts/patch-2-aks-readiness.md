@@ -1,0 +1,1 @@
+Is {{AKS_CLUSTER_NAME}} ready for its next control-plane and node-image upgrade? Use the aks-upgrade-readiness skill and the CPF patch policy. List blockers and conditions with evidence, and explain what auto-upgrade alone would not tell us. Read only.

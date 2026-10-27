@@ -1,0 +1,4 @@
+{
+  "description": "Read-only change-approval evidence pack for a proposed patch or AKS upgrade; never approves or executes.",
+  "readOnly": true
+}

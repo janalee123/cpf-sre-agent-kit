@@ -1,0 +1,7 @@
+subscription_id            = "<subscription-id>"
+resource_group_name        = "<monitoring-resource-group>"
+location                   = "southeastasia"
+alert_name                 = "<aks-workload>-oom-restarts"
+log_analytics_workspace_id = "/subscriptions/<subscription-id>/resourceGroups/<monitoring-resource-group>/providers/Microsoft.OperationalInsights/workspaces/<workspace-name>"
+namespace                  = "<aks-namespace>"
+container_name             = "<container-name>"

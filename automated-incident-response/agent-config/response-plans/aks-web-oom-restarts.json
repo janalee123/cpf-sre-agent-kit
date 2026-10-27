@@ -1,0 +1,16 @@
+{
+  "id": "aks-web-oom-restarts",
+  "isEnabled": true,
+  "incidentPlatform": "AzMonitor",
+  "impactedService": "Azure Kubernetes Service",
+  "priorities": [
+    "P1",
+    "P2"
+  ],
+  "titleContains": "{{AKS_OOM_ALERT_NAME}}",
+  "handlingAgent": "aks-oom-investigator",
+  "agentMode": "review",
+  "maxAutomatedInvestigationAttempts": 3,
+  "mergeEnabled": true,
+  "mergeWindowHours": 3
+}
