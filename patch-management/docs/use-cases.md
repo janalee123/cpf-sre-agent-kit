@@ -100,7 +100,7 @@ not replace them. It **reads across them** and does the analysis and paperwork t
 | Flow | Pre-checks, then human approval in chat, then Update Manager one-time install, then reassess and report |
 | Value | Closes the loop on low-risk machines while keeping a human in control |
 
-### 8. Patch change as code (recommended route to production)
+### 8. Patch change as code (example remediation step)
 
 | | |
 |---|---|
