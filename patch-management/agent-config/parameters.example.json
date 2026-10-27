@@ -7,5 +7,6 @@
   "EXCEPTION_VM_NAME": "<vm-with-registered-exception>",
   "AGENT_NAME": "<agent-name>",
   "POLICY_TITLE": "CPF patch policy (demo)",
-  "PROMPT_PREFIX": "cpf-"
+  "PROMPT_PREFIX": "cpf-",
+  "PATCH_IAC_REPO": "<azure-devops-project>/<infrastructure-repo>"
 }

@@ -1,0 +1,58 @@
+# Sample Azure Pipelines definition for the patch plan. A merged pull request triggers a plan; a person
+# approves the "patch-production" environment before apply.
+trigger:
+  branches:
+    include: [main]
+  paths:
+    include: [patch-as-code/*]
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  serviceConnection: '<azure-resource-manager-service-connection>'
+  workingDirectory: '$(System.DefaultWorkingDirectory)/patch-as-code'
+
+stages:
+  - stage: Plan
+    jobs:
+      - job: plan
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: $(serviceConnection)
+              addSpnToEnvironment: true
+              scriptType: bash
+              scriptLocation: inlineScript
+              workingDirectory: $(workingDirectory)
+              inlineScript: |
+                export ARM_CLIENT_ID=$servicePrincipalId ARM_TENANT_ID=$tenantId ARM_OIDC_TOKEN=$idToken ARM_USE_OIDC=true
+                terraform init -input=false
+                terraform plan -input=false -out tfplan
+                terraform show -no-color tfplan > plan.txt
+          - publish: $(workingDirectory)
+            artifact: plan
+
+  - stage: Apply
+    dependsOn: Plan
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - deployment: apply
+        environment: patch-production   # add an Approvals check to this environment
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: plan
+                - task: AzureCLI@2
+                  inputs:
+                    azureSubscription: $(serviceConnection)
+                    addSpnToEnvironment: true
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    workingDirectory: $(Pipeline.Workspace)/plan
+                    inlineScript: |
+                      export ARM_CLIENT_ID=$servicePrincipalId ARM_TENANT_ID=$tenantId ARM_OIDC_TOKEN=$idToken ARM_USE_OIDC=true
+                      terraform init -input=false
+                      terraform apply -input=false tfplan

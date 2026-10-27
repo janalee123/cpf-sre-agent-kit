@@ -6,11 +6,13 @@ needs is kept as code, so you can review it, version it and redeploy it into any
 | Layer | What it creates | How |
 |---|---|---|
 | Azure resources | SRE Agent, managed identity, Application Insights, least-privilege role assignments, optional sandbox VM | Terraform (`infra/`) |
-| Agent configuration | 6 skills, 2 custom agents, 1 knowledge file, 5 common prompts, 1 scheduled task | Files in `agent-config/`, pushed by `scripts/Deploy-AgentConfig.ps1` |
+| Agent configuration | 7 skills, 2 custom agents, 1 knowledge file, 6 common prompts, 1 scheduled task | Files in `agent-config/`, pushed by `scripts/Deploy-AgentConfig.ps1` |
+| Patch plan as code (optional) | Update Manager maintenance configurations and emergency windows, with a sample approval pipeline | Terraform (`patch-as-code/`) |
 | Guidance | Step-by-step setup with screenshots, use-case catalogue | `docs/` |
 
 > **Read-only by default.** The agent finds, ranks, explains and documents patch risk. Update Manager and
-> AKS do the installing, after a human approves. Gated remediation on a pilot VM is optional and off unless
+> AKS do the installing, after a human approves. To make every patch change go through a pull request and
+> pipeline, use `patch-as-code/` (see guide section 10). Gated remediation on a pilot VM is optional and off unless
 > you turn it on (`enable_patch_write` in Terraform and `-IncludeWriteSkills` in the deploy script).
 
 ## Where to start
@@ -92,7 +94,7 @@ Copy-Item agent-config/parameters.example.json agent-config/parameters.json   # 
 To do steps 2 and 4 in one go, set `apply_agent_config = true` in `terraform.tfvars`. Terraform then runs
 the script after it creates the agent, and again whenever a file in `agent-config/` changes.
 
-Then open the `portal_url` output and run the five common prompts. The full walkthrough, with screenshots,
+Then open the `portal_url` output and run the common prompts. The full walkthrough, with screenshots,
 is in [docs/step-by-step-guide.md](docs/step-by-step-guide.md).
 
 ## Repository layout
@@ -102,6 +104,7 @@ infra/                         Terraform: agent, identity, telemetry, RBAC, opti
   main.tf                      Microsoft.App/agents resource (azapi) + optional config hook
   rbac.tf                      Read roles; optional write role behind enable_patch_write
   demo-vm.tf                   Optional Windows Server VM with manual patching
+patch-as-code/                 Terraform patch plan (Update Manager windows) the agent drafts changes to; sample pipeline
 agent-config/
   parameters.example.json      Values for {{TOKENS}} used in the files below
   skills/<name>/SKILL.md       Skill instructions (what the agent does, guardrails, output format)
@@ -124,13 +127,14 @@ docs/                          Setup guide, use cases, screenshots
 | Change-approval evidence pack | `patch-approval-pack` | `cpf-patch-4-approval-pack` | Read |
 | Which KB fixes which CVE, ranked by real-world risk, with charts | `cve-risk-prioritization` | `cpf-patch-5-cve-risk` | Read |
 | Weekly readiness report | `patch-triage` + `aks-upgrade-readiness` | Scheduled task `weekly-patch-readiness-report` | Read |
+| Draft a patch or AKS version change as code, for a pull request | `patch-iac-change` | `cpf-patch-6-iac-change` | Read |
 | Install approved updates on one pilot VM, with gates | `patch-remediation` | None; ask explicitly | Write (optional) |
 
 ### Custom agents
 
 | Custom agent | Tools | Allowed skills | Access |
 |---|---|---|---|
-| `patch-triage-agent` | Azure CLI **read** only | `patch-triage`, `cve-risk-prioritization`, `aks-upgrade-readiness`, `patch-exception-explainer`, `patch-approval-pack` | Read |
+| `patch-triage-agent` | Azure CLI **read** only | `patch-triage`, `cve-risk-prioritization`, `aks-upgrade-readiness`, `patch-exception-explainer`, `patch-approval-pack`, `patch-iac-change` | Read |
 | `patch-remediation-agent` | Azure CLI read + **write** | `patch-remediation` (one named pilot VM, explicit approval, no reboot) | Write (optional) |
 
 The main agent hands off to these specialists. Separating them means the read-only agent can never run a

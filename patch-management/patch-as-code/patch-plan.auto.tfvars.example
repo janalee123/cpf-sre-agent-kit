@@ -1,0 +1,38 @@
+# The patch plan. Copy to patch-plan.auto.tfvars in your infrastructure repository.
+# The agent's patch-iac-change skill drafts edits to this file; people approve them in a pull request.
+
+subscription_id     = "<subscription-id>"
+resource_group_name = "<maintenance-resource-group>"
+location            = "southeastasia"
+time_zone           = "Singapore Standard Time"
+
+patch_groups = {
+  pilot = {
+    start_date_time = "2026-11-07 01:00"
+    duration        = "03:00"
+    recur_every     = "1Month Second Tuesday Offset4"   # Saturday after Patch Tuesday
+    reboot          = "IfRequired"
+    classifications = ["Critical", "Security"]
+  }
+  prod = {
+    start_date_time = "2026-11-14 01:00"
+    duration        = "03:55"
+    recur_every     = "1Month Second Tuesday Offset11"  # one week after the pilot window
+    reboot          = "IfRequired"
+    classifications = ["Critical", "Security", "UpdateRollup"]
+    kb_exclude      = []
+  }
+}
+
+# Example emergency window, proposed by the agent for a known-exploited CVE and approved in change CHG0001234.
+# emergency_windows = {
+#   kev-2026-11 = {
+#     patch_group     = "prod"
+#     start_date_time = "2026-11-03 22:00"
+#     duration        = "02:00"
+#     kb_include      = ["5044284"]
+#     reboot          = "IfRequired"
+#     change_ref      = "CHG0001234"
+#     reason          = "CVE-2026-12345 is in CISA KEV; policy SLA is 72 hours"
+#   }
+# }

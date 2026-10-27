@@ -100,9 +100,21 @@ not replace them. It **reads across them** and does the analysis and paperwork t
 | Flow | Pre-checks, then human approval in chat, then Update Manager one-time install, then reassess and report |
 | Value | Closes the loop on low-risk machines while keeping a human in control |
 
+### 8. Patch change as code (recommended route to production)
+
+| | |
+|---|---|
+| Question | "Fix the KEV-listed CVEs before the SLA, through infrastructure as code." |
+| Skill / prompt | `patch-iac-change` / `prompts/patch-6-iac-change.md` |
+| Sources | Findings from use cases 1 to 3, machine tags and patch mode, deployed maintenance configurations, AKS available upgrades, policy |
+| Output | A diff to `patch-as-code/patch-plan.auto.tfvars` (or the AKS Terraform), a pull request description with evidence, and the approvals needed. Read only. |
+| Flow | Agent drafts, then a person raises the pull request in Azure Repos, then review and merge, then pipeline plan, then environment approval, then `terraform apply`. Update Manager installs in the window; the agent reassesses afterwards |
+| Value | Every patch change is versioned, reviewed and repeatable; the agent needs no write access to Azure |
+
 ## What the agent does not do in this kit
 
 - Install updates on production machines.
-- Change patch orchestration modes, maintenance configurations or AKS auto-upgrade channels.
+- Change patch orchestration modes, maintenance configurations or AKS auto-upgrade channels directly. It drafts
+  those changes as code (use case 8); people merge and the pipeline applies them.
 - Write to ITSM tools such as ServiceNow or Azure DevOps.
 - Approve changes. The agent drafts; people approve.

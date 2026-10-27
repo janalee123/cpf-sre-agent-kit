@@ -9,7 +9,8 @@
     "cve-risk-prioritization",
     "aks-upgrade-readiness",
     "patch-exception-explainer",
-    "patch-approval-pack"
+    "patch-approval-pack",
+    "patch-iac-change"
   ],
   "handoffs": []
 }

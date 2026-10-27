@@ -1,0 +1,4 @@
+{
+  "description": "Read-only. Drafts a patching change as code (Terraform patch plan or AKS version) for a pull request; never applies it.",
+  "readOnly": true
+}

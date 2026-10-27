@@ -18,7 +18,8 @@ portal, with screenshots from the POC agent.
 7. [Managed resources and connectors](#7-managed-resources-and-connectors)
 8. [Weekly scheduled task](#8-weekly-scheduled-task)
 9. [Run the use cases](#9-run-the-use-cases)
-10. [Troubleshooting](#10-troubleshooting)
+10. [Patch through infrastructure as code](#10-patch-through-infrastructure-as-code)
+11. [Troubleshooting](#11-troubleshooting)
 
 ---
 
@@ -224,7 +225,7 @@ Task configuration (prompt, schedule, model tier and autonomy):
 
 ## 9. Run the use cases
 
-The five common prompts appear in the chat prompt picker. Type `/` in a new chat, or paste the prompt from
+The six common prompts appear in the chat prompt picker. Type `/` in a new chat, or paste the prompt from
 `agent-config/prompts/`. Every prompt ends with "Read only" or "Do not approve or execute".
 
 | # | Prompt file | Screenshot |
@@ -265,7 +266,63 @@ additional context.
 
 ![Weekly report](screenshots/18-weekly-report.png)
 
-## 10. Troubleshooting
+## 10. Patch through infrastructure as code
+
+In sections 1 to 9 the agent reads and reports, and Update Manager installs after approval. To make every
+patch change versioned and reviewed, define the patch schedule in Terraform and let the agent draft changes
+to it. The agent still needs no write access to Azure.
+
+```mermaid
+flowchart LR
+  F["Finding<br/>(CVE risk, triage, AKS readiness)"] --> S["patch-iac-change skill<br/>drafts diff + PR text"]
+  S --> PR["Person raises pull request<br/>in Azure Repos"]
+  PR --> R["Review and merge"]
+  R --> P["Pipeline: terraform plan"]
+  P --> A["Environment approval"]
+  A --> T["terraform apply"]
+  T --> UM["Update Manager installs<br/>in the window"]
+  UM --> V["Agent reassesses"]
+```
+
+**What is in `patch-as-code/`**
+
+| File | What it defines |
+|---|---|
+| `main.tf` | One Update Manager maintenance configuration and dynamic scope per patch group (machines tagged `patch-group = <key>`), plus one-off emergency windows that expire after a day |
+| `variables.tf` | `patch_groups` (recurring windows, classifications, KB exclusions) and `emergency_windows` (KBs, start time, change reference, reason) |
+| `patch-plan.auto.tfvars.example` | The patch plan the agent edits: a pilot and a production window, and a commented emergency example |
+| `azure-pipelines.yml` | Sample Azure Pipelines definition: plan on merge, then apply after approval on the `patch-production` environment |
+
+**Set it up**
+
+1. Copy `patch-as-code/` into your infrastructure repository and rename the example to
+   `patch-plan.auto.tfvars`. Add a remote backend in `versions.tf`.
+2. Set each machine's patch orchestration to **Customer Managed Schedules** (`AutomaticByPlatform` with
+   *bypass platform safety checks on user schedule*) and tag it `patch-group = pilot` or `prod`.
+3. Create the pipeline from `azure-pipelines.yml`, with a workload identity service connection that can
+   manage maintenance configurations. Add an **Approvals** check to the `patch-production` environment and
+   branch policies (required reviewers) on `main`.
+4. Set `PATCH_IAC_REPO` in `agent-config/parameters.json` and run the deploy script again. This loads the
+   `patch-iac-change` skill and the sixth prompt.
+
+**Use it**
+
+Run `patch-6-iac-change` after a CVE risk review, or ask, for example, "Draft the Terraform change to patch
+the KEV CVEs on prod before the SLA." The agent returns:
+
+- the diff, for example a new `emergency_windows` entry with the KB numbers, start time and a change
+  reference placeholder;
+- the pull request description with the evidence, SLA due date and expected `terraform plan` result;
+- the approvals needed.
+
+A person raises the pull request; the pipeline does the rest after the approvals. For AKS, the same skill
+drafts the change to `kubernetes_version`, node pool `orchestrator_version` or `node_os_upgrade_channel` in
+the cluster's own Terraform.
+
+> If you later connect the agent to Azure DevOps, it could raise the pull request itself. Keep the branch
+> policies and environment approval so a person still approves every change.
+
+## 11. Troubleshooting
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
